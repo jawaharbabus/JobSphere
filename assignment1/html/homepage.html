@@ -98,27 +98,32 @@
 </section>
 
 <section class='contact' id='contact'>
-    <div class='container d-flex justify-content-between'>
-        <!-- Left Side: Address and Contact Info -->
-        <div style='width: 50%;'>
-            <h2>Contact Us</h2>
-            <p><strong>Address:</strong><br>1234 Job St,<br>Career City, CA 12345</p>
-            <p><strong>Email:</strong><br>support@jobsphere.com</p>
-            <p><strong>Phone:</strong><br>(123) 456-7890</p>
-        </div>
+    <div class='container'>
+        <div class="row">
+            <!-- Left Side: Address and Contact Info -->
+            <div class="col-md-6 mb-4">
+                <h2>Contact Us</h2>
+                <p><strong>Address:</strong><br>1234 Job St,<br>Career City, CA 12345</p>
+                <p><strong>Email:</strong><br>support@jobsphere.com</p>
+                <p><strong>Phone:</strong><br>(123) 456-7890</p>
+            </div>
 
-        <!-- Right Side: Contact Form -->
-        <form style='width: 40%;' id="contactForm">
-            <h3>Send Us a Message</h3>
-            <input type='text' placeholder='Your Name' required />
-            <input type='email' placeholder='Your Email' required />
-            <textarea style="margin-top: 10px;" rows='7' cols='49' placeholder='Your Message' required></textarea><br>
-            <button type='submit' class='btn btn-primary'>Send Message</button>
-        </form>
-        <!-- Success Alert -->
-        <div class="alert alert-success alert-dismissible fade show" id="successAlert" role="alert" style="display: none;">
-            <strong>Success!</strong> Your message has been sent successfully.
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            <!-- Right Side: Contact Form -->
+            <div class="col-md-6">
+                <form id="contactForm">
+                    <h3>Send Us a Message</h3>
+                    <div class="mb-3">
+                        <input type='text' class="form-control" placeholder='Your Name' required />
+                    </div>
+                    <div class="mb-3">
+                        <input type='email' class="form-control" placeholder='Your Email' required />
+                    </div>
+                    <div class="mb-3">
+                        <textarea class="form-control" rows='5' placeholder='Your Message' required></textarea>
+                    </div>
+                    <button type='submit' class='btn btn-primary'>Send Message</button>
+                </form>
+            </div>
         </div>
     </div>
 </section>

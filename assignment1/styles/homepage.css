@@ -85,3 +85,27 @@ body {
 #jobCarousel .carousel-control-next {
     right: -20px;
 }
+
+.card {
+    width: 80%; /* Adjust this value as needed */
+    margin: auto; /* Center the card */
+}
+
+@media (max-width: 767px) {
+    .contact .container {
+        padding: 0 15px;
+    }
+
+    #contactForm {
+        margin-top: 2rem;
+    }
+}
+
+.contact input, .contact textarea {
+    width: 100%;
+    margin-bottom: 1rem;
+}
+
+.contact textarea {
+    resize: vertical;
+}
