@@ -20,3 +20,6 @@ Job Seekers: Can search for jobs, apply to listings, and receive personalized re
 **Project Highlights**
 
 This project showcases the application of modern web development techniques and technologies to create a robust, user-friendly job board platform. It aims to improve the job search and recruitment process through intelligent features and a responsive design for both web and mobile users.
+
+Checkout the static app at
+https://jawaharbabus.github.io/JobSphere/assignment1/html/homepage.html
