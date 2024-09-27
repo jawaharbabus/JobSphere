@@ -48,6 +48,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
     document.getElementById('applicationModal').addEventListener('hidden.bs.modal', function (event) {
         // Redirect to the landing page after the modal is closed
-        window.location.href = 'jobseeker-home.html';
+        window.location.href = 'jobseeker-landing.html';
     });
 });
