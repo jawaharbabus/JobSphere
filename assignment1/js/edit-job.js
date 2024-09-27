@@ -1,47 +1,47 @@
-import {jobs} from "./data.js";
+// job-editor.js
+
+import { jobs } from "./data.js";
 
 document.addEventListener('DOMContentLoaded', function() {
     const editJobForm = document.getElementById('editJobForm');
     const cancelBtn = document.getElementById('cancelBtn');
-    const saveBtn = document.getElementById('saveBtn');
     const urlParams = new URLSearchParams(window.location.search);
-    const jobId = urlParams.get('id');
-    // Load initial job data
+    const jobId = parseInt(urlParams.get('id'), 10); // Get job ID from URL and convert to number
+
+    console.log("Job ID:", jobId);
     loadJobData(jobId);
 
+    // Event listener for form submission
     editJobForm.addEventListener('submit', function(e) {
-        e.preventDefault();
-        saveJobData(jobId);
+        e.preventDefault(); // Prevent default form submission
+        saveJobData(jobId); // Save job data
     });
 
+    // Event listener for cancel button
     cancelBtn.addEventListener('click', function() {
         if (confirm('Are you sure you want to cancel? Any unsaved changes will be lost.')) {
-            window.location.href = 'talent-seeker-landing.html'; // Redirect to landing page
+            window.location.href = 'talentseeker-landing.html'; // Redirect to landing page
         }
     });
 
+    // Load job data based on job ID
     function loadJobData(jobId) {
-        // Get the job ID from the URL
+        const jobData = jobs.find(item => item.id === jobId); // Find the job by ID
 
-
-        // Here you would typically fetch the job data from your backend using the jobId
-        // For this example, we'll use dummy data
-        var jobData = jobs.find(item => item.id === jobId);
-
-        // Populate the form fields with the job data
-        document.getElementById('jobTitle').value = jobData.title;
-        document.getElementById('company').value = jobData.company;
-        document.getElementById('location').value = jobData.location;
-        document.getElementById('jobType').value = jobData.type;
-        document.getElementById('salary').value = jobData.salary;
-        // document.getElementById('jobDescription').value = jobData.description;
-        // document.getElementById('requirements').value = jobData.requirements;
-        // document.getElementById('benefits').value = jobData.benefits;
+        if (jobData) {
+            // Populate the form fields with the job data
+            document.getElementById('jobTitle').value = jobData.title;
+            document.getElementById('company').value = jobData.company;
+            document.getElementById('location').value = jobData.location;
+            document.getElementById('jobType').value = jobData.type;
+            document.getElementById('salary').value = jobData.salary;
+        } else {
+            console.error("Job not found for ID:", jobId); // Log error if job not found
+        }
     }
 
+    // Save updated job data
     function saveJobData(jobId) {
-        // Here you would typically send the updated data to your backend
-        // For this example, we'll just log it to the console and show an alert
         const updatedJobData = {
             id: jobId,
             title: document.getElementById('jobTitle').value,
@@ -50,14 +50,19 @@ document.addEventListener('DOMContentLoaded', function() {
             type: document.getElementById('jobType').value,
             salary: document.getElementById('salary').value,
             posted: 'just now',
-            // description: document.getElementById('jobDescription').value,
-            // requirements: document.getElementById('requirements').value,
-            // benefits: document.getElementById('benefits').value
         };
-        jobs.push(updatedJobData);
+
+        // Update the jobs array (this example just pushes the updated data)
+        const jobIndex = jobs.findIndex(job => job.id === jobId);
+        if (jobIndex !== -1) {
+            jobs[jobIndex] = updatedJobData; // Update existing job
+        } else {
+            jobs.push(updatedJobData); // Add new job if not found
+        }
+
         console.log('Updated job data:', updatedJobData);
         alert('Job details saved successfully!');
-        // Redirect to the talent seeker landing page after saving
-        window.location.href = 'talent-seeker-landing.html';
+
+        window.location.href = 'talentseeker-landing.html'; // Redirect after saving
     }
 });

@@ -1,50 +1,37 @@
-import {users} from "./data.js";
+import { users } from "./data.js";
 
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', initializeLoginPage);
+
+function initializeLoginPage() {
     const jobseekerTab = document.getElementById('jobseekerTab');
     const talentseekerTab = document.getElementById('talentseekerTab');
     const jobseekerForm = document.getElementById('jobseekerForm');
     const talentseekerForm = document.getElementById('talentseekerForm');
 
-    function toggleForm(activeTab, activeForm, inactiveTab, inactiveForm) {
-        activeTab.classList.toggle('active');
-        if (activeForm.style.display === 'none' || activeForm.style.display === '') {
-            activeForm.style.display = 'block';
-            inactiveForm.style.display = 'none';
-            inactiveTab.classList.remove('active');
-        } else {
-            activeForm.style.display = 'none';
-        }
-    }
+    jobseekerTab.addEventListener('click', () => toggleForm(jobseekerTab, jobseekerForm, talentseekerTab, talentseekerForm));
+    talentseekerTab.addEventListener('click', () => toggleForm(talentseekerTab, talentseekerForm, jobseekerTab, jobseekerForm));
 
-    jobseekerTab.addEventListener('click', function() {
-        toggleForm(jobseekerTab, jobseekerForm, talentseekerTab, talentseekerForm);
-    });
+    setupLoginForm(jobseekerForm, 'jobseeker', 'jobseeker-landing.html');
+    setupLoginForm(talentseekerForm, 'talentseeker', 'talentseeker-landing.html');
+}
 
-    talentseekerTab.addEventListener('click', function() {
-        toggleForm(talentseekerTab, talentseekerForm, jobseekerTab, jobseekerForm);
-    });
+function toggleForm(activeTab, activeForm, inactiveTab, inactiveForm) {
+    activeTab.classList.toggle('active');
+    activeForm.style.display = activeForm.style.display === 'none' || activeForm.style.display === '' ? 'block' : 'none';
+    inactiveForm.style.display = 'none';
+    inactiveTab.classList.remove('active');
+}
 
-    // Job Seeker Login
-    const jobSeekerLoginButton = jobseekerForm.querySelector('.btn-primary');
-    jobSeekerLoginButton.addEventListener('click', function(e) {
+function setupLoginForm(form, userType, redirectUrl) {
+    const loginButton = form.querySelector('.btn-primary');
+    loginButton.addEventListener('click', (e) => {
         e.preventDefault();
-        const username = jobseekerForm.querySelector('input[type="text"]').value;
-        const password = jobseekerForm.querySelector('input[type="password"]').value;
-        const authResult = authenticateUser(username, password, 'jobseeker');
-        handleAuthResult(authResult, 'jobseeker-landing.html');
+        const username = form.querySelector('input[type="text"]').value;
+        const password = form.querySelector('input[type="password"]').value;
+        const authResult = authenticateUser(username, password, userType);
+        handleAuthResult(authResult, redirectUrl);
     });
-
-    // Talent Seeker Login
-    const talentSeekerLoginButton = talentseekerForm.querySelector('.btn-primary');
-    talentSeekerLoginButton.addEventListener('click', function(e) {
-        e.preventDefault();
-        const username = talentseekerForm.querySelector('input[type="text"]').value;
-        const password = talentseekerForm.querySelector('input[type="password"]').value;
-        const authResult = authenticateUser(username, password, 'talentseeker');
-        handleAuthResult(authResult, 'talentseeker-landing.html');
-    });
-});
+}
 
 function authenticateUser(username, password, userType) {
     if (users.has(username)) {
@@ -58,16 +45,13 @@ function authenticateUser(username, password, userType) {
 
 function handleAuthResult(authResult, redirectUrl) {
     if (authResult.success) {
-        // Successful login
         window.location.href = redirectUrl;
     } else {
-        // Failed login
         showErrorModal();
     }
 }
 
 function showErrorModal() {
-    // Create modal elements
     const modalBackdrop = document.createElement('div');
     modalBackdrop.className = 'modal-backdrop fade show';
 
@@ -90,17 +74,12 @@ function showErrorModal() {
     </div>
   `;
 
-    // Add modal to the body
     document.body.insertAdjacentHTML('beforeend', modalHTML);
     document.body.appendChild(modalBackdrop);
 
-    // Add event listener to close button
     const closeButtons = document.querySelectorAll('[data-bs-dismiss="modal"]');
-    closeButtons.forEach(button => {
-        button.addEventListener('click', closeModal);
-    });
+    closeButtons.forEach(button => button.addEventListener('click', closeModal));
 
-    // Close modal when clicking outside
     modalBackdrop.addEventListener('click', closeModal);
 }
 
@@ -108,10 +87,6 @@ function closeModal() {
     const modal = document.getElementById('errorModal');
     const modalBackdrop = document.querySelector('.modal-backdrop');
 
-    if (modal) {
-        modal.remove();
-    }
-    if (modalBackdrop) {
-        modalBackdrop.remove();
-    }
+    if (modal) modal.remove();
+    if (modalBackdrop) modalBackdrop.remove();
 }

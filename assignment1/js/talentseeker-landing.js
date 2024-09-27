@@ -1,88 +1,98 @@
 import { jobs } from './data.js';
 
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', initializeTalentSeekerDashboard);
+
+function initializeTalentSeekerDashboard() {
     const postJobBtn = document.getElementById('postJobBtn');
     const jobPostForm = document.getElementById('jobPostDiv');
     const submitBtn = document.getElementById('postSubmit');
     const postForm = document.getElementById('jobPostForm');
 
-    postJobBtn.addEventListener('click', function() {
-        jobPostForm.classList.toggle('d-none');
-    });
-
-    submitBtn.addEventListener("click", function(e) {
-        e.preventDefault(); // Prevent form submission
-
-        const title = postForm.querySelector('input[placeholder="Job Title"]').value;
-        const location = postForm.querySelector('input[placeholder="Location"]').value;
-        const description = postForm.querySelector('textarea[placeholder="Job Description"]').value;
-        const range = postForm.querySelector('input[placeholder="Salary Range"]').value;
-        const type = postForm.querySelector('select').value;
-
-        if (title && location && description && range && type) {
-            jobs.push({
-                id: jobs.length + 1,
-                title: title,
-                company: "TechCorp Inc.",
-                location: location,
-                type: type,
-                salary: range,
-                posted: "Just Now",
-                description: description
-            });
-            console.log(jobs);
-            populateJobListings();
-            // Clear the form
-            postForm.reset();
-            jobPostForm.classList.add('d-none'); // Hide the form after submission
-        } else {
-            alert("Please fill all fields");
-        }
-    });
+    postJobBtn.addEventListener('click', toggleJobPostForm);
+    submitBtn.addEventListener("click", handleJobSubmission);
 
     populateJobListings();
-});
+}
+
+function toggleJobPostForm() {
+    const jobPostForm = document.getElementById('jobPostDiv');
+    jobPostForm.classList.toggle('d-none');
+}
+
+function handleJobSubmission(e) {
+    e.preventDefault();
+    const postForm = document.getElementById('jobPostForm');
+    const formData = getFormData(postForm);
+
+    if (validateFormData(formData)) {
+        addNewJob(formData);
+        resetForm(postForm);
+        toggleJobPostForm();
+        populateJobListings();
+    } else {
+        alert("Please fill all fields");
+    }
+}
+
+function getFormData(form) {
+    return {
+        title: form.querySelector('input[placeholder="Job Title"]').value,
+        location: form.querySelector('input[placeholder="Location"]').value,
+        description: form.querySelector('textarea[placeholder="Job Description"]').value,
+        salary: form.querySelector('input[placeholder="Salary Range"]').value,
+        type: form.querySelector('select').value
+    };
+}
+
+function validateFormData(formData) {
+    return Object.values(formData).every(value => value.trim() !== '');
+}
+
+function addNewJob(formData) {
+    jobs.push({
+        id: generateJobId(),
+        title: formData.title,
+        company: "TechCorp Inc.",
+        location: formData.location,
+        type: formData.type,
+        salary: formData.salary,
+        posted: "Just Now",
+        description: formData.description
+    });
+    console.log(jobs);
+}
+
+function generateJobId() {
+    return Math.max(...jobs.map(job => job.id), 0) + 1;
+}
+
+function resetForm(form) {
+    form.reset();
+}
 
 function createJobCard(job) {
     const jobCard = document.createElement('div');
-    var url = "edit-job.html?id="+job.id;
     jobCard.className = 'job-card';
-
     jobCard.innerHTML = `
         <h3>${job.title}</h3>
         <p>${job.company} - ${job.location}</p>
         <p>${job.type} • ${job.salary} • Posted ${job.posted}</p>
-        <a href=${url} class="btn btn-outline-primary me-2 edit-btn" data-id="${job.id}">Edit</a>
-        <button class="btn btn-outline-danger me-2 delete-btn" data-id="${job.id}">Delete</button>
+        <a href="edit-job.html?id=${job.id}" class="btn btn-outline-primary me-2 edit-btn">Edit</a>
+        <button class="btn btn-outline-danger me-2 delete-btn">Delete</button>
         <button class="btn btn-primary">View Applications</button>
     `;
 
-    // Add event listeners for edit and delete buttons
-    jobCard.querySelector('.edit-btn').addEventListener('click', function() {
-        editJob(job.id);
-    });
-
-    jobCard.querySelector('.delete-btn').addEventListener('click', function() {
-        deleteJob(job.id);
-    });
+    jobCard.querySelector('.delete-btn').addEventListener('click', () => deleteJob(job.id));
 
     return jobCard;
 }
 
 function populateJobListings() {
     const jobListingsContainer = document.getElementById('jobListings');
-    jobListingsContainer.innerHTML = ''; // Clear existing content
-
+    jobListingsContainer.innerHTML = '';
     jobs.forEach(job => {
-        const jobCard = createJobCard(job);
-        jobListingsContainer.appendChild(jobCard);
+        jobListingsContainer.appendChild(createJobCard(job));
     });
-}
-
-function editJob(jobId) {
-    // Implement edit functionality
-    console.log(`Editing job with id: ${jobId}`);
-    // You could redirect to an edit page or show an edit form
 }
 
 function deleteJob(jobId) {

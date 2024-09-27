@@ -7,34 +7,40 @@ document.addEventListener('DOMContentLoaded', function() {
     const searchInput = document.getElementById('searchInput');
     const jobListingsContainer = document.querySelector('.job-listings');
 
-    filterToggle.addEventListener('click', function() {
-        filterColumn.classList.toggle('show');
-    });
+    initializeEventListeners();
+    displayJobs(jobs); // Initial display of all jobs
 
-    // Close filter column when clicking outside of it on mobile
-    document.addEventListener('click', function(event) {
+    function initializeEventListeners() {
+        filterToggle.addEventListener('click', toggleFilterColumn);
+        document.addEventListener('click', handleOutsideClick);
+        window.addEventListener('resize', handleWindowResize);
+        filterForm.addEventListener('submit', handleFilterSubmit);
+        searchInput.addEventListener('input', filterAndDisplayJobs);
+    }
+
+    function toggleFilterColumn() {
+        filterColumn.classList.toggle('show');
+    }
+
+    function handleOutsideClick(event) {
         const isClickInsideFilter = filterColumn.contains(event.target);
         const isClickOnToggle = filterToggle.contains(event.target);
 
         if (!isClickInsideFilter && !isClickOnToggle && window.innerWidth <= 991) {
             filterColumn.classList.remove('show');
         }
-    });
+    }
 
-    // Adjust layout on window resize
-    window.addEventListener('resize', function() {
+    function handleWindowResize() {
         if (window.innerWidth > 991) {
             filterColumn.classList.remove('show');
         }
-    });
+    }
 
-    // Filter and search functionality
-    filterForm.addEventListener('submit', function(e) {
+    function handleFilterSubmit(e) {
         e.preventDefault();
         filterAndDisplayJobs();
-    });
-
-    searchInput.addEventListener('input', filterAndDisplayJobs);
+    }
 
     function filterAndDisplayJobs() {
         const jobType = document.getElementById('jobType').value;
@@ -42,31 +48,41 @@ document.addEventListener('DOMContentLoaded', function() {
         const salary = document.getElementById('salary').value;
         const searchTerm = searchInput.value.toLowerCase();
 
-        const filteredJobs = jobs.filter(job => {
-            const matchesJobType = !jobType || job.type === jobType;
-            const matchesLocation = !location || job.location.toLowerCase().includes(location);
-            const matchesSalary = matchesSalaryRange(job.salary, salary);
-            const matchesSearch = job.title.toLowerCase().includes(searchTerm) ||
-                job.company.toLowerCase().includes(searchTerm) ||
-                job.location.toLowerCase().includes(searchTerm);
-
-            return matchesJobType && matchesLocation && matchesSalary && matchesSearch;
-        });
+        const filteredJobs = jobs.filter(job =>
+            matchesJobType(job, jobType) &&
+            matchesLocation(job, location) &&
+            matchesSalary(job, salary) &&
+            matchesSearch(job, searchTerm)
+        );
 
         displayJobs(filteredJobs);
     }
 
-    function matchesSalaryRange(jobSalary, selectedRange) {
+    function matchesJobType(job, jobType) {
+        return !jobType || job.type === jobType;
+    }
+
+    function matchesLocation(job, location) {
+        return !location || job.location.toLowerCase().includes(location);
+    }
+
+    function matchesSalary(job, selectedRange) {
         if (!selectedRange) return true;
 
         const [min, max] = selectedRange.split('-').map(Number);
-        const jobSalaryValue = parseInt(jobSalary.replace(/\D/g, ''));
+        const jobSalaryValue = parseInt(job.salary.replace(/\D/g, ''));
 
         if (selectedRange === '100000+') {
             return jobSalaryValue >= 100000;
         }
 
         return jobSalaryValue >= min && jobSalaryValue <= max;
+    }
+
+    function matchesSearch(job, searchTerm) {
+        return job.title.toLowerCase().includes(searchTerm) ||
+            job.company.toLowerCase().includes(searchTerm) ||
+            job.location.toLowerCase().includes(searchTerm);
     }
 
     function displayJobs(jobsToDisplay) {
@@ -88,7 +104,4 @@ document.addEventListener('DOMContentLoaded', function() {
         `;
         return jobCard;
     }
-
-    // Initial display of all jobs
-    displayJobs(jobs);
 });
