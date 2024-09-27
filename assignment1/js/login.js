@@ -24,31 +24,29 @@ document.addEventListener('DOMContentLoaded', function() {
     talentseekerTab.addEventListener('click', function() {
         toggleForm(talentseekerTab, talentseekerForm, jobseekerTab, jobseekerForm);
     });
-});
 
-//authentication
-document.addEventListener('DOMContentLoaded', function() {
-    const loginForm = document.getElementById('jobseekerForm');
-    const loginButton = loginForm.querySelector('.btn-primary');
+    // Job Seeker Login
+    const jobSeekerLoginButton = jobseekerForm.querySelector('.btn-primary');
+    jobSeekerLoginButton.addEventListener('click', function(e) {
+        e.preventDefault();
+        const username = jobseekerForm.querySelector('input[type="text"]').value;
+        const password = jobseekerForm.querySelector('input[type="password"]').value;
+        const authResult = authenticateUser(username, password, 'jobseeker');
+        handleAuthResult(authResult, 'jobseeker-landing.html');
+    });
 
-    loginButton.addEventListener('click', function(e) {
-        e.preventDefault(); // Prevent the default link behavior
-
-        const username = loginForm.querySelector('input[type="text"]').value;
-        const password = loginForm.querySelector('input[type="password"]').value;
-        const authResult = authenticateUser(username, password);
-        if (authResult.success) {
-            // Successful login
-            window.location.href = 'jobseeker-landing.html';
-        } else {
-            // Failed login
-            showErrorModal();
-        }
+    // Talent Seeker Login
+    const talentSeekerLoginButton = talentseekerForm.querySelector('.btn-primary');
+    talentSeekerLoginButton.addEventListener('click', function(e) {
+        e.preventDefault();
+        const username = talentseekerForm.querySelector('input[type="text"]').value;
+        const password = talentseekerForm.querySelector('input[type="password"]').value;
+        const authResult = authenticateUser(username, password, 'talentseeker');
+        handleAuthResult(authResult, 'talentseeker-landing.html');
     });
 });
 
-
-function authenticateUser(username, password) {
+function authenticateUser(username, password, userType) {
     if (users.has(username)) {
         const userData = users.get(username);
         if (userData.password === password) {
@@ -58,6 +56,15 @@ function authenticateUser(username, password) {
     return { success: false };
 }
 
+function handleAuthResult(authResult, redirectUrl) {
+    if (authResult.success) {
+        // Successful login
+        window.location.href = redirectUrl;
+    } else {
+        // Failed login
+        showErrorModal();
+    }
+}
 
 function showErrorModal() {
     // Create modal elements
