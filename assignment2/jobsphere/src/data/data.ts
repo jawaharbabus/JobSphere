@@ -31,6 +31,65 @@ export interface JobSeeker {
   experienceLevel: string;
   skills: string[];
 }
+export interface Talent {
+  id: number;
+  title: string;
+  company: string;
+  location: string;
+  type: string;
+  salary: string;
+  postedDate: Date;
+  description: string;
+  requirements: string[];
+  benefits: string[];
+}
+export interface TalentSeeker {
+  id: number;
+  name: string;
+  email: string;
+  company: string;
+}
+export const talents: Talent[] = [
+  {
+    id: 1,
+    title: "Backend Engineer",
+    company: "TechCorp",
+    location: "Remote",
+    type: "Full-time",
+    salary: "80,000 - 100,000 USD",
+    postedDate: new Date('2023-08-01'),
+    description: "Responsible for developing and maintaining backend services.",
+    requirements: ["3+ years of experience", "Proficiency in Node.js", "Experience with databases"],
+    benefits: ["Health insurance", "Remote work", "Stock options"],
+  },
+  {
+    id: 2,
+    title: "Frontend Developer",
+    company: "Designify",
+    location: "San Francisco, CA",
+    type: "Contract",
+    salary: "50 - 70 USD/hour",
+    postedDate: new Date('2023-08-05'),
+    description: "Build and enhance user-facing features for our web app.",
+    requirements: ["HTML, CSS, JavaScript", "Experience with React", "UI/UX design experience"],
+    benefits: ["Flexible hours", "Collaborative team environment"],
+  },
+];
+
+export const talentSeekers: TalentSeeker[] = [
+  {
+    id: 1,
+    name: "Alice Johnson",
+    email: "alice@techcorp.com",
+    company: "TechCorp",
+  },
+  {
+    id: 2,
+    name: "Bob Smith",
+    email: "bob@designify.com",
+    company: "Designify",
+  },
+];
 
 export const jobs: Job[] = [
   {
