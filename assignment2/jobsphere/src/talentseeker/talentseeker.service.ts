@@ -1,11 +1,12 @@
 import { Injectable } from '@nestjs/common';
-import { Talent, TalentSeeker } from './data'; 
-import { talents, talentSeekers } from './data';
+import { TalentSeeker, Job, JobApplication } from './data';
+import { talentSeekers, jobs, jobApplications } from './data';
 
 @Injectable()
 export class TalentSeekerService {
-  private talents = talents; // Reference to data.ts array
   private talentSeekers = talentSeekers;
+  private jobs = jobs;
+  private jobApplications = jobApplications;
 
   addTalentSeeker(seeker: TalentSeeker): TalentSeeker {
     seeker.id = this.talentSeekers.length + 1;
@@ -13,18 +14,22 @@ export class TalentSeekerService {
     return seeker;
   }
 
-  postTalent(talent: Talent): Talent {
-    talent.id = this.talents.length + 1;
-    talent.postedDate = new Date();
-    this.talents.push(talent);
-    return talent;
+  postJob(job: Job): Job {
+    job.id = this.jobs.length + 1;
+    job.postedDate = new Date();
+    this.jobs.push(job);
+    return job;
   }
 
-  getAllTalents(): Talent[] {
-    return this.talents;
+  updateJob(id: number, updatedJob: Partial<Job>): Job | undefined {
+    const jobIndex = this.jobs.findIndex((job) => job.id === id);
+    if (jobIndex === -1) return undefined;
+
+    this.jobs[jobIndex] = { ...this.jobs[jobIndex], ...updatedJob };
+    return this.jobs[jobIndex];
   }
 
-  getTalent(id: number): Talent | undefined {
-    return this.talents.find((talent) => talent.id === id);
+  getApplications(jobId: number): JobApplication[] {
+    return this.jobApplications.filter((app) => app.jobId === jobId);
   }
 }
