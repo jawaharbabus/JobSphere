@@ -1,58 +1,61 @@
 import { Injectable } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
+import { Job, JobDocument } from '../schema/job.schema';
 import {
-  Job,
   JobApplication,
-  JobSeeker,
-  jobs,
-  jobApplications,
-  jobSeekers,
-} from '../data/data';
+  JobApplicationDocument,
+} from '../schema/job-application.schema';
+import { JobSeeker, JobSeekerDocument } from '../schema/job-seeker.schema';
 
 @Injectable()
 export class JobSeekerService {
-  getAllJobs(): Job[] {
-    return jobs;
+  constructor(
+    @InjectModel(Job.name) private jobModel: Model<JobDocument>,
+    @InjectModel(JobApplication.name)
+    private jobApplicationModel: Model<JobApplicationDocument>,
+    @InjectModel(JobSeeker.name)
+    private jobSeekerModel: Model<JobSeekerDocument>,
+  ) {}
+
+  async getAllJobs(): Promise<Job[]> {
+    return this.jobModel.find().exec();
   }
 
-  getJob(id: number): Job | undefined {
-    return jobs.find((job) => job.id === id);
+  async getJob(id: string): Promise<Job | null> {
+    return this.jobModel.findById(id).exec();
   }
 
-  applyForJob(application: JobApplication): JobApplication {
-    application.id = jobApplications.length + 1;
-    application.applicationDate = new Date();
-    jobApplications.push(application);
-    return application;
+  async applyForJob(
+    application: Partial<JobApplication>,
+  ): Promise<JobApplication> {
+    const createdApplication = new this.jobApplicationModel({
+      ...application,
+      applicationDate: new Date(),
+    });
+    return createdApplication.save();
   }
 
-  registerJobSeeker(jobSeeker: JobSeeker): JobSeeker {
-    jobSeeker.id = jobSeekers.length + 1;
-    jobSeekers.push(jobSeeker);
-    return jobSeeker;
+  async registerJobSeeker(jobSeeker: Partial<JobSeeker>): Promise<JobSeeker> {
+    const createdJobSeeker = new this.jobSeekerModel(jobSeeker);
+    return createdJobSeeker.save();
   }
 
-  getJobSeeker(id: number): JobSeeker | undefined {
-    return jobSeekers.find((seeker) => seeker.id === id);
+  async getJobSeeker(id: string): Promise<JobSeeker | null> {
+    return this.jobSeekerModel.findById(id).exec();
   }
 
-  updateJobSeeker(
-    id: number,
-    updatedJobSeeker: JobSeeker,
-  ): JobSeeker | undefined {
-    const index = jobSeekers.findIndex((seeker) => seeker.id === id);
-    if (index !== -1) {
-      jobSeekers[index] = { ...jobSeekers[index], ...updatedJobSeeker, id };
-      return jobSeekers[index];
-    }
-    return undefined;
+  async updateJobSeeker(
+    id: string,
+    updatedJobSeeker: Partial<JobSeeker>,
+  ): Promise<JobSeeker | null> {
+    return this.jobSeekerModel
+      .findByIdAndUpdate(id, updatedJobSeeker, { new: true })
+      .exec();
   }
 
-  deleteJobSeeker(id: number): boolean {
-    const index = jobSeekers.findIndex((seeker) => seeker.id === id);
-    if (index !== -1) {
-      jobSeekers.splice(index, 1);
-      return true;
-    }
-    return false;
+  async deleteJobSeeker(id: string): Promise<boolean> {
+    const result = await this.jobSeekerModel.findByIdAndDelete(id).exec();
+    return result !== null;
   }
 }

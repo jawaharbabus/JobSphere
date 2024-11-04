@@ -1,35 +1,43 @@
 import { Injectable } from '@nestjs/common';
-import { TalentSeeker, Job, JobApplication } from './data';
-import { talentSeekers, jobs, jobApplications } from './data';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
+import {
+  TalentSeeker,
+  TalentSeekerDocument,
+} from '../schema/talent-seeker.schema';
+import { Job, JobDocument } from '../schema/job.schema';
+import {
+  JobApplication,
+  JobApplicationDocument,
+} from '../schema/job-application.schema';
 
 @Injectable()
 export class TalentSeekerService {
-  private talentSeekers = talentSeekers;
-  private jobs = jobs;
-  private jobApplications = jobApplications;
+  constructor(
+    @InjectModel(TalentSeeker.name)
+    private talentSeekerModel: Model<TalentSeekerDocument>,
+    @InjectModel(Job.name) private jobModel: Model<JobDocument>,
+    @InjectModel(JobApplication.name)
+    private jobApplicationModel: Model<JobApplicationDocument>,
+  ) {}
 
-  addTalentSeeker(seeker: TalentSeeker): TalentSeeker {
-    seeker.id = this.talentSeekers.length + 1;
-    this.talentSeekers.push(seeker);
-    return seeker;
+  async addTalentSeeker(seeker: Partial<TalentSeeker>): Promise<TalentSeeker> {
+    const createdSeeker = new this.talentSeekerModel(seeker);
+    return createdSeeker.save();
   }
 
-  postJob(job: Job): Job {
-    job.id = this.jobs.length + 1;
-    job.postedDate = new Date();
-    this.jobs.push(job);
-    return job;
+  async postJob(job: Partial<Job>): Promise<Job> {
+    const createdJob = new this.jobModel({ ...job, postedDate: new Date() });
+    return createdJob.save();
   }
 
-  updateJob(id: number, updatedJob: Partial<Job>): Job | undefined {
-    const jobIndex = this.jobs.findIndex((job) => job.id === id);
-    if (jobIndex === -1) return undefined;
-
-    this.jobs[jobIndex] = { ...this.jobs[jobIndex], ...updatedJob };
-    return this.jobs[jobIndex];
+  async updateJob(id: string, updatedJob: Partial<Job>): Promise<Job | null> {
+    return this.jobModel
+      .findByIdAndUpdate(id, updatedJob, { new: true })
+      .exec();
   }
 
-  getApplications(jobId: number): JobApplication[] {
-    return this.jobApplications.filter((app) => app.jobId === jobId);
+  async getApplications(jobId: string): Promise<JobApplication[]> {
+    return this.jobApplicationModel.find({ jobId }).exec();
   }
 }

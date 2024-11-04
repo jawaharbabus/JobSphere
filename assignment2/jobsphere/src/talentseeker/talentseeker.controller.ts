@@ -1,6 +1,8 @@
 import { Controller, Get, Post, Put, Body, Param } from '@nestjs/common';
 import { TalentSeekerService } from './talentseeker.service';
-import { Job, TalentSeeker, JobApplication } from './data';
+import { Job } from '../schema/job.schema';
+import { TalentSeeker } from '../schema/talent-seeker.schema';
+import { JobApplication } from '../schema/job-application.schema';
 
 @Controller('api/talentseeker')
 export class TalentSeekerController {
@@ -11,18 +13,18 @@ export class TalentSeekerController {
     return this.talentSeekerService.addTalentSeeker(seeker);
   }
 
-  @Post('post-job')
+  @Post('postjob')
   postJob(@Body() job: Job) {
     return this.talentSeekerService.postJob(job);
   }
 
-  @Put('update-job/:id')
-  updateJob(@Param('id') id: number, @Body() updatedJob: Partial<Job>) {
+  @Put(':id')
+  updateJob(@Param('id') id: string, @Body() updatedJob: Job) {
     return this.talentSeekerService.updateJob(id, updatedJob);
   }
 
   @Get('applications/:jobId')
-  getApplications(@Param('jobId') jobId: number): JobApplication[] {
+  getApplications(@Param('jobId') jobId: string): Promise<JobApplication[]> {
     return this.talentSeekerService.getApplications(jobId);
   }
 }

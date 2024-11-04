@@ -8,7 +8,8 @@ import {
   Delete,
 } from '@nestjs/common';
 import { JobSeekerService } from './jobseeker.service';
-import { JobSeeker, JobApplication } from '../data/data';
+import { JobApplication } from '../schema/job-application.schema';
+import { JobSeeker } from '../schema/job-seeker.schema';
 
 @Controller('api/jobseeker')
 export class JobSeekerController {
@@ -21,7 +22,7 @@ export class JobSeekerController {
 
   @Get('jobs/:id')
   getJob(@Param('id') id: string) {
-    return this.jobSeekerService.getJob(Number(id));
+    return this.jobSeekerService.getJob(id);
   }
 
   @Post('apply')
@@ -36,16 +37,16 @@ export class JobSeekerController {
 
   @Get(':id')
   getJobSeeker(@Param('id') id: string) {
-    return this.jobSeekerService.getJobSeeker(Number(id));
+    return this.jobSeekerService.getJobSeeker(id);
   }
 
   @Put(':id')
   updateJobSeeker(@Param('id') id: string, @Body() jobSeeker: JobSeeker) {
-    return this.jobSeekerService.updateJobSeeker(Number(id), jobSeeker);
+    return this.jobSeekerService.updateJobSeeker(id, jobSeeker);
   }
 
   @Delete(':id')
   deleteJobSeeker(@Param('id') id: string) {
-    return this.jobSeekerService.deleteJobSeeker(Number(id));
+    return this.jobSeekerService.deleteJobSeeker(id);
   }
 }
