@@ -7,6 +7,7 @@ import {
   TalentSeeker,
   TalentSeekerDocument,
 } from '../schema/talent-seeker.schema';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class AuthService {
@@ -21,8 +22,7 @@ export class AuthService {
   // Validate and login JobSeeker
   async validateJobSeeker(email: string, password: string): Promise<any> {
     const jobSeeker = await this.jobSeekerModel.findOne({ email });
-    if (jobSeeker && jobSeeker.password === password) {
-      // Use proper password hashing in production
+    if (jobSeeker && await bcrypt.compare(password, jobSeeker.password)) {
       const { password, ...result } = jobSeeker.toObject();
       return result;
     }
@@ -41,8 +41,7 @@ export class AuthService {
     const talentSeeker = await this.talentSeekerModel.findOne({
       contactEmail: email,
     });
-    if (talentSeeker && talentSeeker.password === password) {
-      // Use proper password hashing in production
+    if (talentSeeker && await bcrypt.compare(password, talentSeeker.password)) {
       const { password, ...result } = talentSeeker.toObject();
       return result;
     }
