@@ -7,6 +7,7 @@ import {
   JobApplicationDocument,
 } from '../schema/job-application.schema';
 import { JobSeeker, JobSeekerDocument } from '../schema/job-seeker.schema';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class JobSeekerService {
@@ -37,8 +38,12 @@ export class JobSeekerService {
   }
 
   async registerJobSeeker(jobSeeker: Partial<JobSeeker>): Promise<JobSeeker> {
-    const createdJobSeeker = new this.jobSeekerModel(jobSeeker);
-    return createdJobSeeker.save();
+    const saltRounds = 10;
+    const hashedPassword = await bcrypt.hash(jobSeeker.password, saltRounds);
+    jobSeeker.password = hashedPassword;
+
+    const newJobSeeker = new this.jobSeekerModel(jobSeeker);
+    return await newJobSeeker.save();
   }
 
   async getJobSeeker(id: string): Promise<JobSeeker | null> {
