@@ -83,3 +83,39 @@ Nest is an MIT-licensed open source project. It can grow thanks to the sponsors 
 ## License
 
 Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+**Advanced Job Board Application**
+
+**Description**
+
+This project is an advanced job board application that bridges the gap between employers and job seekers. It provides a comprehensive platform for employers to post job listings and for job seekers to search, filter, and apply for jobs. The application leverages modern web technologies and AI to create a seamless and intelligent job search experience.
+
+**Key Features**
+
+User management for employers and job seekers
+
+**Tech Stack**
+
+Frontend: HTML, CSS, JS
+
+**Roles Involved**
+
+Employers: Can post job listings, manage applications, and access analytics dashboard
+Job Seekers: Can search for jobs, apply to listings, and receive personalized recommendations
+
+**Project Highlights**
+
+This project showcases the application of modern web development techniques and technologies to create a robust, user-friendly job board platform. It aims to improve the job search and recruitment process through intelligent features and a responsive design for both web and mobile users.
+
+Checkout the static app at
+https://jawaharbabus.github.io/JobSphere/assignment1/html/homepage.html
+
+
+**Updates :**
+- **Authentication:**
+  - Password hashing with `bcrypt`.
+  - JWT-based authentication for secure session handling.
+- **Authorization:**
+  - Role-based access control for different user roles (e.g., admin, user).
+  - Guards and decorators to enforce access rules.
+- **Scalability:**
+  - Modular structure separating user management and authentication logic.
