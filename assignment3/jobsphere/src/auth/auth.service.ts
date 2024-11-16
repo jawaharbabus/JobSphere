@@ -41,7 +41,10 @@ export class AuthService {
     const talentSeeker = await this.talentSeekerModel.findOne({
       contactEmail: email,
     });
-    if (talentSeeker && await bcrypt.compare(password, talentSeeker.password)) {
+    if (
+      talentSeeker &&
+      (await bcrypt.compare(password, talentSeeker.password))
+    ) {
       const { password, ...result } = talentSeeker.toObject();
       return result;
     }
