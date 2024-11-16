@@ -30,7 +30,7 @@ export class AuthService {
   }
 
   async loginJobSeeker(user: any) {
-    const payload = { email: user.email, sub: user._id, role: 'JobSeeker' };
+    const payload = { email: user.email, sub: user._id, role: user.role }; // Included role
     return {
       access_token: this.jwtService.sign(payload),
     };
@@ -49,7 +49,7 @@ export class AuthService {
   }
 
   async loginTalentSeeker(user: any) {
-    const payload = { email: user.email, sub: user._id, role: 'TalentSeeker' };
+    const payload = { email: user.email, sub: user._id, role: user.role }; // Include role
     return {
       access_token: this.jwtService.sign(payload),
     };
