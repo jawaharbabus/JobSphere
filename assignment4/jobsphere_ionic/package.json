@@ -1,0 +1,45 @@
+{
+    "name": "jobsphere-app",
+    "version": "1.0.0",
+    "private": true,
+    "scripts": {
+      "start": "ionic serve",
+      "build": "ionic build",
+      "test": "echo \"Error: no test specified\" && exit 1",
+      "eject": "react-scripts eject",
+      "capacitor:add": "ionic capacitor add",
+      "capacitor:run": "ionic capacitor run",
+      "capacitor:sync": "ionic capacitor sync"
+    },
+    "dependencies": {
+      "@capacitor/core": "^5.0.0",
+      "@capacitor/cli": "^5.0.0",
+      "@ionic/react": "^7.0.0",
+      "@ionic/react-router": "^7.0.0",
+      "react": "^18.0.0",
+      "react-dom": "^18.0.0",
+      "react-router-dom": "^6.0.0",
+      "bootstrap": "^5.3.0"
+    },
+    "devDependencies": {
+      "@capacitor/android": "^5.0.0",
+      "@capacitor/ios": "^5.0.0",
+      "@ionic/cli": "^7.0.0"
+    },
+    "browserslist": {
+      "production": [
+        ">0.2%",
+        "not dead",
+        "not op_mini all"
+      ],
+      "development": [
+        "last 1 chrome version",
+        "last 1 firefox version",
+        "last 1 safari version"
+      ]
+    },
+    "description": "Jobsphere App - Ionic React Project",
+    "author": "Your Name",
+    "license": "MIT"
+  }
+  
